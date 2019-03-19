@@ -57,24 +57,36 @@
                     String lastCategoryName = "";
                     String links = "";
                     while(rs.next()) {
-                        String category = rs.getString("product_type").trim().toUpperCase();
+                        String category = rs.getString("product_type").trim();
                         if (!category.equals(lastCategoryName)) {
-                            links += rs.isLast() ? category : category + "&emsp;&bull;&emsp;";
+                            String ctg = "<a href='?category="+ category.toLowerCase() +"'>" + category.toUpperCase() + "</a>";
+                            links += rs.isLast() ? ctg : ctg + "&emsp;&bull;&emsp;";
                         }
                         lastCategoryName = category;
                     }
                     // to unescape/decode included special characters - '&emsp;'
                     request.setAttribute("linksString", links);
                 %>
-                <a href>${linksString}</a>
+                ${linksString}
             </div>
             <div class="product-list">
                 <%
-                    /**
-                     * Selecting and displaying all products from DB.
-                     */
+                    String param = request.getParameter("category");
+                    String sql;
+
                     try {
-                        String sql = "select * from nat.products";
+                        if (param != null) {
+                            /**
+                             * Selecting and displaying products under
+                             * given category.
+                             */
+                            sql = "select * from nat.products where product_type = '"+ param +"'";
+                        } else {
+                            /**
+                             * Selecting and displaying all products from DB.
+                             */
+                            sql = "select * from nat.products";
+                        }
                         st = con.createStatement();
                         rs = st.executeQuery(sql);
 
