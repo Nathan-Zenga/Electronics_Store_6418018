@@ -1,10 +1,19 @@
 @import url('https://use.fontawesome.com/releases/v5.2.0/css/all.css');
+@import url('https://fonts.googleapis.com/css?family=Questrial');
+
+html, body {
+    /*font-family: Questrial;*/
+}
 
 h1, h2, h3, h4, h5, h6, .row {
     margin: 0;
 }
 
-.header {
+.row {
+    display: block;
+}
+
+header {
     padding: 20px 0;
     background-color: rgb(25, 25, 25);
     text-align: center;
@@ -12,7 +21,7 @@ h1, h2, h3, h4, h5, h6, .row {
     margin-bottom: 1.5em;
 }
 
-.header > .row:not(:last-child) {
+header .row:not(:last-child) {
     margin-bottom: 1em;
 }
 
@@ -36,4 +45,24 @@ h1, h2, h3, h4, h5, h6, .row {
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
+}
+
+.cart-icon {
+    position: relative;
+    display: block;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 40px;
+    height: 40px;
+    color: rgb(25, 25, 25);
+    background-color: white;
+    border-radius: 50%;
+}
+
+.cart-icon span {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    transform: translateY(-50%);
+    width: 100%;
 }
