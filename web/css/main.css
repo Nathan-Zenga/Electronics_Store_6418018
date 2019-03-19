@@ -1,0 +1,39 @@
+@import url('https://use.fontawesome.com/releases/v5.2.0/css/all.css');
+
+h1, h2, h3, h4, h5, h6, .row {
+    margin: 0;
+}
+
+.header {
+    padding: 20px 0;
+    background-color: rgb(25, 25, 25);
+    text-align: center;
+    color: white;
+    margin-bottom: 1.5em;
+}
+
+.header > .row:not(:last-child) {
+    margin-bottom: 1em;
+}
+
+@media(max-width: 767px) {
+    .product {
+        margin-bottom: 2em;
+    }
+}
+
+.product > *:not(.product-image) {
+    padding-top: 1em;
+    text-align: center;
+}
+
+.product-price {
+    font-weight: bold;
+}
+
+.product-image {
+    height: 200px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
