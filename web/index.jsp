@@ -4,19 +4,12 @@
     Author     : Nathan
 --%>
 
-<%@page import="java.util.*" %>
-<%@page import="javax.sql.*;" %>
-<%@page import="java.sql.*" %>
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
-<!DOCTYPE html>
-<html>
-    <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>Electronics Store</title>
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-        <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-        <link rel="stylesheet" type="text/css" href="./css/main.css">
-    </head>
+<%@ page import="java.util.*" %>
+<%@ page import="javax.sql.*;" %>
+<%@ page import="java.sql.*" %>
+<%@ page contentType="text/html" pageEncoding="UTF-8" %>
+<%@ page session="true" import="shopserverpkg.Product" %>
+<jsp:include page="partials/header.jsp" flush="true" />
     <%
     Connection con = null;
     Statement st = null;
@@ -38,8 +31,7 @@
         String sql = "select * from nat.products";
         st = con.createStatement();
         rs = st.executeQuery(sql);
-//        System.out.println("After SQL - " + st);
-//        System.out.println("RS - " + rs);
+
     } catch(Exception e) {
         System.out.println("Query Exception:");
         System.out.println(e.getMessage());
@@ -49,32 +41,33 @@
     }
     %>
     <body>
-        <div class="header">
-            <div class="container">
-                <div class="row title">
-                    <h1>Electronics Store</h1>
-                </div>
-                <div class="row header-content">
-                    <% ArrayList cartlist = (ArrayList) session.getAttribute("cartlist"); %>
-                    <% int cartcount = cartlist != null ? cartlist.size() : 0; %>
-                    <i class="fas fa-shopping-cart"></i> <span class="count"><%= cartcount %></span>
-                </div>
-            </div>
-        </div>
+        <jsp:include page="partials/body-header.jsp" flush="true" />
 
         <div class="product-list container">
-            <% while(rs.next()){ %>
-            <% String product_name = rs.getString("product_name"); %>
-            <div class="product col-sm-4">
+            <% while(rs.next()){
+               String id = rs.getString("id");
+               String product_name = rs.getString("product_name");
+               String product_price = rs.getString("product_price");
+               String product_type = rs.getString("product_type"); %>
+            <div class="product col-sm-4 float-sm-left">
                 <div class="product-image"
                      style="background-image: url('./img/<%= product_name %>.jpg')">
                 </div>
                 <div class="product-name"><%= product_name %></div>
-                <div class="product-price">£<%= rs.getString("product_price") %></div>
+                <div class="product-price">£<%= product_price %></div>
                 <div class="options">
-                    <form method="get">
-                        <input type="hidden" name="id" value="<%= rs.getFloat("id") %>">
-                        <input class="form-control btn btn-default" type="submit" name="add" value="Add to cart">
+                    <form method="post" action="ShopServlet">
+                        <input type="hidden" name="id" value="<%= id %>">
+                        <input type="hidden" name="product_name" value="<%= product_name %>">
+                        <input type="hidden" name="product_price" value="<%= product_price %>">
+                        <input type="hidden" name="product_type" value="<%= product_type %>">
+                        <div class="quantity input-group mb-3">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">Quantity</span>
+                            </div>
+                            <input class="form-control" type="number" name="product_quantity" value="1" min="1">
+                        </div>
+                        <input class="form-control btn btn-secondary" type="submit" name="action" value="Add to cart">
                     </form>
                 </div>
             </div>
