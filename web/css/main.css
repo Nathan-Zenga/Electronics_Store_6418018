@@ -66,3 +66,8 @@ header .row:not(:last-child) {
     transform: translateY(-50%);
     width: 100%;
 }
+
+.sub-nav.categories {
+    text-align: center;
+    padding-bottom: 2em;
+}
