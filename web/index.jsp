@@ -30,8 +30,8 @@
     <body>
         <jsp:include page="partials/body-header.jsp" flush="true" />
 
-        <main class="inner-body container">
-            <div class="sub-nav categories">
+        <main class="container inner-body">
+            <div class="row sub-nav categories">
                 <%
                     /**
                      * Selecting names of product types to display
@@ -59,7 +59,10 @@
                     while(rs.next()) {
                         String category = rs.getString("product_type").trim();
                         if (!category.equals(lastCategoryName)) {
-                            String ctg = "<a href='?category="+ category.toLowerCase() +"'>" + category.toUpperCase() + "</a>";
+                            String ctg = "<a href='?category="+ category.toLowerCase() +"'>" +
+                                    category.split("")[0].toUpperCase() +
+                                    category.substring(1) +
+                                    "</a>";
                             links += rs.isLast() ? ctg : ctg + "&emsp;&bull;&emsp;";
                         }
                         lastCategoryName = category;
@@ -69,18 +72,18 @@
                 %>
                 ${linksString}
             </div>
-            <div class="product-list">
+            <div class="row product-list">
                 <%
-                    String param = request.getParameter("category");
+                    String categoryParam = request.getParameter("category");
                     String sql;
 
                     try {
-                        if (param != null) {
+                        if (categoryParam != null) {
                             /**
                              * Selecting and displaying products under
                              * given category.
                              */
-                            sql = "select * from nat.products where product_type = '"+ param +"'";
+                            sql = "select * from nat.products where product_type = '"+ categoryParam +"'";
                         } else {
                             /**
                              * Selecting and displaying all products from DB.
@@ -104,7 +107,7 @@
                     String product_price = rs.getString("product_price");
                     String product_type = rs.getString("product_type");
                 %>
-                <div class="product col-sm-4 float-sm-left">
+                <div class="product col-md-4 float-md-left">
                     <div class="product-image"
                          style="background-image: url('./img/<%= product_name %>.jpg')">
                     </div>
