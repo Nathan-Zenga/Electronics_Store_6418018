@@ -43,6 +43,8 @@ public class ShopServlet extends HttpServlet {
         ArrayList cartList = (ArrayList)session.getAttribute("cartlist");
         // gathering current action param
         String action = request.getParameter("action").trim();
+        // preparing total price calculation for any requeust
+        float total = 0;
         
         if (action.equals("Add to cart")) {
 
@@ -53,7 +55,6 @@ public class ShopServlet extends HttpServlet {
             String pType = request.getParameter("product_Type");
 
             Product product = new Product(id, pName, pPrice, pQuantity, pType);
-            float total = 0;
 
             if (cartList == null || cartList.isEmpty()) {
                 cartList = new ArrayList<Product>();
@@ -97,9 +98,28 @@ public class ShopServlet extends HttpServlet {
             session.setAttribute("cartlist", cartList);
             session.setAttribute("totalprice", totalPrice);
             RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/cart.jsp");
-            dispatcher.forward(request, response); 
-        }
+            dispatcher.forward(request, response);
 
+        } else if (action.equals("Update Quantity")) {
+            int updatedQuantity = Integer.parseInt(request.getParameter("updatedQuantity"));
+            float id = Float.parseFloat(request.getParameter("id"));
+            Product currentItem;
+
+            for (int i = 0; i < cartList.size(); i++) {
+                Product item = (Product)cartList.get(i);
+                if (item.getID() == id) {
+                    currentItem = item;
+                    currentItem.setQuantity(updatedQuantity);
+                    cartList.set(i, currentItem);
+                }
+                total += item.getPrice() * item.getQuantity();
+            }
+            session.setAttribute("cartlist", cartList);
+            session.setAttribute("totalprice", total);
+            RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/cart.jsp");
+            dispatcher.forward(request, response);
+
+        }
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
