@@ -14,39 +14,56 @@
     <body>
         <jsp:include page="partials/body-header.jsp" flush="true" />
 
-        <div class="cart-list container">
-            <%
-                if (items != null && !items.isEmpty()) {
-                    float totalPriceValue = (Float)session.getAttribute("totalprice");
-                    String totalPrice = String.format("%.2f", totalPriceValue);
+        <main class="container inner-body">
+            <div class="row cart-list">
+                <%
+                    if (items != null && !items.isEmpty()) {
+                        float totalPrice = (Float)session.getAttribute("totalprice");
+                        String totalPriceFormatted = String.format("%.2f", totalPrice);
 
-                    for (int i = 0; i < items.size(); i++) {
-                        Product item = (Product)items.get(i);
-            %>
-            <div class="row">
-                <p><%= item.getName() %> <b>&times; <%= item.getQuantity() %></b> - <b>£<%= item.getPrice() %></b></p>
-                <p>
+                        for (int i = 0; i < items.size(); i++) {
+                            Product item = (Product)items.get(i);
+                %>
+                <div class="row">
                     <form method="post" action="ShopServlet">
-                        <input type="hidden" name="id" value="<%= item.getID() %>">
-                        <input class="btn btn-danger" type="submit" name="action" value="Remove">
+                        <%= item.getName() %>
+                        <b>
+                            &emsp; £<%= item.getPrice() %> &times;
+                            <input class="updatedQuantityInput"
+                                   style="width: 50px"
+                                   type="number"
+                                   name="updatedQuantity"
+                                   min="1"
+                                   value="<%= item.getQuantity() %>">
+                        </b>
+                        <div class="cart-item-options">
+                                <input type="hidden" name="id" value="<%= item.getID() %>">
+                                <input class="btn btn-success update-qty-btn" type="submit" name="action" value="Update Quantity" style="display: none">
+                                <input class="btn btn-danger remove-btn" type="submit" name="action" value="Remove">
+                        </div>
                     </form>
-                </p>
+                </div>
+                <% } %>
+
+                <br>
+                <div class="total" style="margin-bottom: 1em">Total: £<%= totalPriceFormatted %></div>
+                <div class="checkout">
+                    <form method="post" action="ShopServlet">
+                        <input type="hidden" name="totalprice" value="<%= totalPrice %>">
+                        <input class="btn btn-success" type="submit" name="action" value="Checkout">
+                    </form>
+                </div>
+                <% } else { %>
+                    <p style="font-weight: bold; text-align: center">No items in cart.</p>
+                <% } %>
             </div>
-            <% } %>
-            <br>
-            <div class="total" style="margin-bottom: 1em">
-                Total: £<%= totalPrice %>
-            </div>
-            <div class="checkout">
-                <form method="post" action="ShopServlet">
-                    <input type="hidden" name="totalprice" value="<%= totalPriceValue %>">
-                    <input class="btn btn-success" type="submit" name="action" value="Checkout">
-                </form>
-            </div>
-            <% } else { %>
-                <p>No items in cart.</p>
-            <% } %>
-        </div>
+        </main>
+            
+            <script>
+                $(".updatedQuantityInput").on("change keypress", function(){
+                   $(this).closest("form").find(".update-qty-btn").show();
+                });
+            </script>
 
     </body>
 </html>
