@@ -59,7 +59,7 @@
             con.close();
         }
 
-//        session.invalidate();
+        session.setAttribute("checkedout", true);
         response.sendRedirect(request.getContextPath());
     }
 %>
