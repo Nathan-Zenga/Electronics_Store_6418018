@@ -7,8 +7,67 @@
 <%@ page import="java.util.*" %>
 <%@ page import="javax.sql.*;" %>
 <%@ page import="java.sql.*" %>
+<%@ page import="java.text.SimpleDateFormat" %>
 <%@ page contentType="text/html" pageEncoding="UTF-8" %>
 <%@ page session="true" import="shopserverpkg.Product" %>
+<%
+    if (request.getParameter("checkout") != null) {
+        int order_no = (int)Math.round(Math.random() * 1000000);
+        int customer_no = (int)Math.round(Math.random() * 1000000);
+        float total_price = Float.parseFloat(request.getParameter("totalprice"));
+        String billing_address = "24 Garden Rose Green";
+        String card_type = "Credit";
+
+        billing_address = "'"+ billing_address +"'";
+        card_type = "'"+ card_type +"'";
+
+        // today's date
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        java.util.Date dateNow = Calendar.getInstance().getTime();
+        String order_date = dateFormat.format(dateNow);
+
+        // connecting to database
+        Connection con = null;
+        Statement st = null;
+        String url = "jdbc:derby://localhost/electronic_store_DB";
+        String user = "nat";
+        String pass = "nat";
+
+        try {
+            Class.forName("org.apache.derby.jdbc.ClientDriver");
+            con = DriverManager.getConnection(url, user, pass);
+
+        } catch(Exception e){
+            e.printStackTrace();
+            System.out.println("No Conection: " + e);
+        }
+
+        // insertion process - storing order
+        try {
+            String sql = "" +
+                    "insert into orders values (" +
+                    order_no + ", " +
+                    customer_no + ", " +
+                    billing_address + ", " +
+                    card_type + ", " +
+                    total_price + ", " +
+                    // converting string representation of a date/time value
+                    // to SQL-correct format
+                    "'" + Timestamp.valueOf(order_date) + "')";
+
+            st = con.createStatement();
+            st.executeUpdate(sql);
+        } catch(Exception e) {
+            System.out.println("Query Exception:");
+            System.out.println(e.getMessage());
+            st.close();
+            con.close();
+        }
+
+//        session.invalidate();
+        response.sendRedirect(request.getContextPath());
+    }
+%>
 <jsp:include page="partials/header.jsp" flush="true" />
     <% ArrayList items = (ArrayList)session.getAttribute("cartlist"); %>
     <body>
@@ -48,9 +107,9 @@
                 <br>
                 <div class="total" style="margin-bottom: 1em">Total: £<%= totalPriceFormatted %></div>
                 <div class="checkout">
-                    <form method="post" action="ShopServlet">
+                    <form method="get">
                         <input type="hidden" name="totalprice" value="<%= totalPrice %>">
-                        <input class="btn btn-success" type="submit" name="action" value="Checkout">
+                        <input class="btn btn-success" type="submit" name="checkout" value="Checkout">
                     </form>
                 </div>
                 <% } else { %>
