@@ -13,7 +13,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
-import javax.servlet.RequestDispatcher;
 import javax.servlet.http.HttpSession;
 
 /**
@@ -43,6 +42,8 @@ public class ShopServlet extends HttpServlet {
         ArrayList cartList = (ArrayList)session.getAttribute("cartlist");
         // gathering current action param
         String action = request.getParameter("action");
+        // getting referring uri for redirection in POST requests
+        String referrer = request.getHeader("referer");
         // preparing total price calculation for any requeust
         float total = 0;
         
@@ -80,8 +81,7 @@ public class ShopServlet extends HttpServlet {
             }
             session.setAttribute("cartlist", cartList);
             session.setAttribute("totalprice", total);
-            RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/index.jsp");
-            dispatcher.forward(request, response);
+            response.sendRedirect(referrer);
         }
 
         else if (action.equals("Remove")) {
@@ -97,8 +97,7 @@ public class ShopServlet extends HttpServlet {
             }
             session.setAttribute("cartlist", cartList);
             session.setAttribute("totalprice", totalPrice);
-            RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/cart.jsp");
-            dispatcher.forward(request, response);
+            response.sendRedirect(referrer);
 
         } else if (action.equals("Update Quantity")) {
             int updatedQuantity = Integer.parseInt(request.getParameter("updatedQuantity"));
@@ -116,8 +115,7 @@ public class ShopServlet extends HttpServlet {
             }
             session.setAttribute("cartlist", cartList);
             session.setAttribute("totalprice", total);
-            RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/cart.jsp");
-            dispatcher.forward(request, response);
+            response.sendRedirect(referrer);
 
         }
     }
