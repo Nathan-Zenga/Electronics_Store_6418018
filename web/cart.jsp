@@ -18,9 +18,6 @@
         String billing_address = "24 Garden Rose Green";
         String card_type = "Credit";
 
-        billing_address = "'"+ billing_address +"'";
-        card_type = "'"+ card_type +"'";
-
         // today's date
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         java.util.Date dateNow = Calendar.getInstance().getTime();
@@ -28,7 +25,7 @@
 
         // connecting to database
         Connection con = null;
-        Statement st = null;
+        PreparedStatement st = null;
         String url = "jdbc:derby://localhost/electronic_store_DB";
         String user = "nat";
         String pass = "nat";
@@ -44,19 +41,17 @@
 
         // insertion process - storing order
         try {
-            String sql = "" +
-                    "insert into orders values (" +
-                    order_no + ", " +
-                    customer_no + ", " +
-                    billing_address + ", " +
-                    card_type + ", " +
-                    total_price + ", " +
-                    // converting string representation of a date/time value
-                    // to SQL-correct format
-                    "'" + Timestamp.valueOf(order_date) + "')";
+            String sql = "insert into orders values (?, ?, ?, ?, ?, ?)";
+            st = con.prepareStatement(sql);
+            st.setInt(1, order_no);
+            st.setInt(2, customer_no);
+            st.setString(3, billing_address);
+            st.setString(4, card_type);
+            st.setFloat(5, total_price);
+            st.setTimestamp(6, Timestamp.valueOf(order_date));
 
-            st = con.createStatement();
-            st.executeUpdate(sql);
+            st.executeUpdate();
+
         } catch(Exception e) {
             System.out.println("Query Exception:");
             System.out.println(e.getMessage());
