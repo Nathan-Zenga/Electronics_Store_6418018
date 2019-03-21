@@ -36,13 +36,13 @@ public class ShopServlet extends HttpServlet {
     throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         
-        //getting or setting new session
+        // retrieving current session or setting new session
         HttpSession session = request.getSession(true);
         
         // preparing session attributes
         ArrayList cartList = (ArrayList)session.getAttribute("cartlist");
         // gathering current action param
-        String action = request.getParameter("action").trim();
+        String action = request.getParameter("action");
         // preparing total price calculation for any requeust
         float total = 0;
         
@@ -57,7 +57,7 @@ public class ShopServlet extends HttpServlet {
             Product product = new Product(id, pName, pPrice, pQuantity, pType);
 
             if (cartList == null || cartList.isEmpty()) {
-                cartList = new ArrayList<Product>();
+                cartList = new ArrayList();
                 cartList.add(product);
                 total += product.getPrice() * product.getQuantity();
 
