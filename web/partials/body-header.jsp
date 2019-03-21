@@ -9,7 +9,7 @@
         <header class="header">
             <div class="container">
                 <div class="row title">
-                    <h1><a href="/e-shop/">Electronics Store</a></h1>
+                    <h1><a href="<%= request.getContextPath() %>">Electronics Store</a></h1>
                 </div>
                 <div class="row header-content">
                     <% ArrayList cartlist = (ArrayList) session.getAttribute("cartlist"); %>
