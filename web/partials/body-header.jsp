@@ -22,3 +22,11 @@
                 </div>
             </div>
         </header>
+        <% if (session.getAttribute("error") != null) { %>
+        <div class="msg btn-danger">
+            <%= session.getAttribute("error") %>
+        </div>
+        <%
+            session.removeAttribute("error");
+            }
+        %>

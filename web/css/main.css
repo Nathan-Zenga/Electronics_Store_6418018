@@ -77,3 +77,14 @@ header .row:not(:last-child) {
 .cart-item-options > form {
     display: inline-block;
 }
+
+.checkout-form > * {
+    margin-bottom: 1em;
+}
+
+.msg {
+    padding: 10px 0;
+    text-align: center;
+    font-weight: bold;
+    margin-bottom: 1em;
+}
