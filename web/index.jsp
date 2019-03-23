@@ -9,6 +9,7 @@
 <%@ page import="java.sql.*" %>
 <%@ page contentType="text/html" pageEncoding="UTF-8" %>
 <%@ page session="true" import="shopserverpkg.Product" %>
+<% request.setAttribute("title", ""); %>
 <jsp:include page="partials/header.jsp" flush="true" />
     <%
     Connection con = null;

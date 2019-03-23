@@ -5,62 +5,13 @@
 --%>
 
 <%@ page import="java.util.*" %>
-<%@ page import="javax.sql.*;" %>
-<%@ page import="java.sql.*" %>
-<%@ page import="java.text.SimpleDateFormat" %>
 <%@ page contentType="text/html" pageEncoding="UTF-8" %>
 <%@ page session="true" import="shopserverpkg.Product" %>
+<% request.setAttribute("title", "Cart - "); %>
 <%
     if (request.getParameter("checkout") != null) {
-        int order_no = (int)Math.round(Math.random() * 1000000);
-        int customer_no = (int)Math.round(Math.random() * 1000000);
-        float total_price = Float.parseFloat(request.getParameter("totalprice"));
-        String billing_address = "24 Garden Rose Green";
-        String card_type = "Credit";
-
-        // today's date
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        java.util.Date dateNow = Calendar.getInstance().getTime();
-        String order_date = dateFormat.format(dateNow);
-
-        // connecting to database
-        Connection con = null;
-        PreparedStatement st = null;
-        String url = "jdbc:derby://localhost/electronic_store_DB";
-        String user = "nat";
-        String pass = "nat";
-
-        try {
-            Class.forName("org.apache.derby.jdbc.ClientDriver");
-            con = DriverManager.getConnection(url, user, pass);
-
-        } catch(Exception e){
-            e.printStackTrace();
-            System.out.println("No Conection: " + e);
-        }
-
-        // insertion process - storing order
-        try {
-            String sql = "insert into orders values (?, ?, ?, ?, ?, ?)";
-            st = con.prepareStatement(sql);
-            st.setInt(1, order_no);
-            st.setInt(2, customer_no);
-            st.setString(3, billing_address);
-            st.setString(4, card_type);
-            st.setFloat(5, total_price);
-            st.setTimestamp(6, Timestamp.valueOf(order_date));
-
-            st.executeUpdate();
-
-        } catch(Exception e) {
-            System.out.println("Query Exception:");
-            System.out.println(e.getMessage());
-            st.close();
-            con.close();
-        }
-
-        session.setAttribute("checkedout", true);
-        response.sendRedirect(request.getContextPath());
+        session.setAttribute("checkingout", true);
+        response.sendRedirect(request.getContextPath() + "/checkout.jsp");
     }
 %>
 <jsp:include page="partials/header.jsp" flush="true" />
@@ -91,9 +42,9 @@
                                    value="<%= item.getQuantity() %>">
                         </b>
                         <div class="cart-item-options">
-                                <input type="hidden" name="id" value="<%= item.getID() %>">
-                                <input class="btn btn-success update-qty-btn" type="submit" name="action" value="Update Quantity" style="display: none">
-                                <input class="btn btn-danger remove-btn" type="submit" name="action" value="Remove">
+                            <input type="hidden" name="id" value="<%= item.getID() %>">
+                            <input class="btn btn-success update-qty-btn" type="submit" name="action" value="Update Quantity" style="display: none">
+                            <input class="btn btn-danger remove-btn" type="submit" name="action" value="Remove">
                         </div>
                     </form>
                 </div>
@@ -103,7 +54,6 @@
                 <div class="total" style="margin-bottom: 1em">Total: £<%= totalPriceFormatted %></div>
                 <div class="checkout">
                     <form method="get">
-                        <input type="hidden" name="totalprice" value="<%= totalPrice %>">
                         <input class="btn btn-success" type="submit" name="checkout" value="Checkout">
                     </form>
                 </div>
