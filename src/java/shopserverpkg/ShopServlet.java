@@ -97,6 +97,7 @@ public class ShopServlet extends HttpServlet {
             }
             session.setAttribute("cartlist", cartList);
             session.setAttribute("totalprice", totalPrice);
+            if (totalPrice == 0) session.removeAttribute("checkingout");
             response.sendRedirect(referrer);
 
         } else if (action.equals("Update Quantity")) {
