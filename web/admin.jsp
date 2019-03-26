@@ -105,39 +105,44 @@
                         <input class="form-control" type="text" name="product_name" placeholder="Product name" required>
                         <input class="form-control" type="text" name="product_price" placeholder="Price" required>
                         <input class="form-control" type="text" name="product_image" placeholder="Product image (enter URL)">
-                        <select class="form-control" type="text" name="product_type" placeholder="Category" required>
-                            <option value="">Select category</option>
-                            <%
-                            // retrieving category names to display as options
-                            try {
-                                String sql = "select product_type from nat.products " +
-                                        "order by product_type asc";
-                                st = con.prepareStatement(sql);
-                                rs = st.executeQuery();
+                        <div class="product_type input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">Select category</span>
+                            </div>
+                            <select class="form-control" type="text" name="product_type" placeholder="Category" required>
+                                <option value=""></option>
+                                <%
+                                // retrieving category names to display as options
+                                try {
+                                    String sql = "select product_type from nat.products " +
+                                            "order by product_type asc";
+                                    st = con.prepareStatement(sql);
+                                    rs = st.executeQuery();
 
-                            } catch(Exception e) {
-                                System.out.println("Query Exception:");
-                                System.out.println(e.getMessage());
-                                rs.close();
-                                st.close();
-                                con.close();
-                            }
-
-                            String lastSelectedType = "";
-                            while(rs.next()) {
-                                String option = rs.getString("product_type");
-                                if (!lastSelectedType.equals(option)) {
-                            %>
-                            <option value="<%= option %>">
-                                <%= option.split("")[0].toUpperCase() + option.substring(1) %>
-                            </option>
-                            <%
+                                } catch(Exception e) {
+                                    System.out.println("Query Exception:");
+                                    System.out.println(e.getMessage());
+                                    rs.close();
+                                    st.close();
+                                    con.close();
                                 }
-                                lastSelectedType = option;
-                            }
-                            %>
-                            <option value="new">Add new category...</option>
-                        </select>
+
+                                String lastSelectedType = "";
+                                while(rs.next()) {
+                                    String option = rs.getString("product_type");
+                                    if (!lastSelectedType.equals(option)) {
+                                %>
+                                <option value="<%= option %>">
+                                    <%= option.split("")[0].toUpperCase() + option.substring(1) %>
+                                </option>
+                                <%
+                                    }
+                                    lastSelectedType = option;
+                                }
+                                %>
+                                <option value="new">Add new category...</option>
+                            </select>
+                        </div>
                         <input class="form-control" type="text" name="new_category" placeholder="Enter new category" style="display: none">
                         <input class="form-control btn-secondary" type="submit" name="save-product" value="Save product">
                     </form>
