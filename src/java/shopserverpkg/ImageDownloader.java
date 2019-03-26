@@ -22,8 +22,10 @@ public class ImageDownloader {
         String rootPath = request.getSession().getServletContext().getRealPath("/img/");
         String ext = src.contains(".png") || src.contains(".PNG") ? "png" : "jpg";
         boolean complete;
-
-        newFilename = rootPath + "/" + newFilename + "." + ext;
+        
+        int endindex = rootPath.indexOf("\\build\\");
+        rootPath = rootPath.substring(0, endindex) + "\\web\\img";
+        newFilename = rootPath + "\\" + newFilename + "." + ext;
         System.out.println(newFilename);
 
         try {
