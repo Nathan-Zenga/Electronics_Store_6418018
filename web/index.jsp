@@ -119,7 +119,7 @@
                 %>
                 <div class="product col-md-4 float-md-left">
                     <div class="product-image"
-                         style="background-image: url('./img/<%= product_name %>.jpg')">
+                         style="background-image: url('./img/<%= product_name.replaceAll(" ", "_") %>.jpg')">
                     </div>
                     <div class="product-name"><%= product_name %></div>
                     <div class="product-price">£<%= product_price %></div>
