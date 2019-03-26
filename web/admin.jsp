@@ -42,7 +42,7 @@
             new ImageDownloader().save(request, product_image, product_name.replaceAll(" ", "_"));
         }
 
-        if (request.getParameter("new_category") != null || !request.getParameter("new_category").isEmpty()) {
+        if (request.getParameter("new_category") != null && !request.getParameter("new_category").isEmpty()) {
             product_type = request.getParameter("new_category");
         }
 
@@ -110,7 +110,7 @@
                                 <span class="input-group-text">Select category</span>
                             </div>
                             <select class="form-control" type="text" name="product_type" placeholder="Category" required>
-                                <option value=""></option>
+                                    <option value=""></option>
                                 <%
                                 // retrieving category names to display as options
                                 try {
