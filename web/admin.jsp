@@ -31,11 +31,16 @@
     }
 
     if (request.getParameter("save-product") != null) {
-        
+
         long id = new RandomID().generate();
         String product_name = request.getParameter("product_name");
         double product_price = Double.parseDouble(request.getParameter("product_price"));
+        String product_image = request.getParameter("product_image");
         String product_type = request.getParameter("product_type");
+        
+        if (product_image != null && !product_image.isEmpty()) {
+            new ImageDownloader().save(request, product_image, product_name.replaceAll(" ", "_"));
+        }
 
         if (request.getParameter("new_category") != null || !request.getParameter("new_category").isEmpty()) {
             product_type = request.getParameter("new_category");
@@ -99,6 +104,7 @@
                     <form class="new-product-form" method="get">
                         <input class="form-control" type="text" name="product_name" placeholder="Product name" required>
                         <input class="form-control" type="text" name="product_price" placeholder="Price" required>
+                        <input class="form-control" type="text" name="product_image" placeholder="Product image (enter URL)">
                         <select class="form-control" type="text" name="product_type" placeholder="Category" required>
                             <option value="">Select category</option>
                             <%
