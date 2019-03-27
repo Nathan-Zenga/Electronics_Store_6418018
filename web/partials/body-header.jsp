@@ -26,7 +26,10 @@
         <div class="msg btn-danger">
             <%= session.getAttribute("error") %>
         </div>
-        <%
-            session.removeAttribute("error");
-            }
-        %>
+        <% session.removeAttribute("error");
+        } else if (session.getAttribute("success") != null) { %>
+        <div class="msg btn-success">
+            <%= session.getAttribute("success") %>
+        </div>
+        <% session.removeAttribute("success");
+        } %>
