@@ -67,12 +67,6 @@
         request.setAttribute("success-msg", "Product saved!");
         response.sendRedirect(request.getHeader("referer"));
     }
-
-    // restricting page access to admin authentication
-    if (session.getAttribute("isSignedIn") == null) /*{
-        session.setAttribute("error", "Please sign in");
-        response.sendRedirect("admin_sign_in.jsp");
-    } else */{
 %>
 <jsp:include page="partials/header.jsp" flush="true" />
     <body>
@@ -204,4 +198,3 @@
 
     </body>
 </html>
-<% } %>
