@@ -18,17 +18,8 @@ import javax.crypto.SecretKey;
  */
 public class Encrypt_Decrypt {
     static Cipher cipher;
-    static SecretKey secretKey;
 
     public Encrypt_Decrypt() throws Exception {
-        /* 
-         create key 
-         If we need to generate a new key use a KeyGenerator
-         If we have existing plaintext key use a SecretKeyFactory
-        */ 
-        KeyGenerator keyGenerator = KeyGenerator.getInstance("AES");
-        keyGenerator.init(128); // block size is 128bits
-        secretKey = keyGenerator.generateKey();
         /*
           Cipher Info
           Algorithm : for the encryption of electronic data
@@ -39,7 +30,7 @@ public class Encrypt_Decrypt {
         cipher = Cipher.getInstance("AES"); //SunJCE provider AES algorithm, mode(optional) and padding schema(optional)  
     }
 
-    public static String encrypt(String plainText, SecretKey secretKey)
+    public String encrypt(String plainText, SecretKey secretKey)
             throws Exception {
         byte[] plainTextByte = plainText.getBytes();
         cipher.init(Cipher.ENCRYPT_MODE, secretKey);
@@ -49,7 +40,7 @@ public class Encrypt_Decrypt {
         return encryptedText;
     }
 
-    public static String decrypt(String encryptedText, SecretKey secretKey)
+    public String decrypt(String encryptedText, SecretKey secretKey)
             throws Exception {
         Base64.Decoder decoder = Base64.getDecoder();
         byte[] encryptedTextByte = decoder.decode(encryptedText);
@@ -58,8 +49,9 @@ public class Encrypt_Decrypt {
         String decryptedText = new String(decryptedByte);
         return decryptedText;
     }
-    
-    public boolean matchPassword (String pass, String encryptedText) throws Exception {
+
+    public boolean matchPassword (String pass, String encryptedText, SecretKey secretKey)
+            throws Exception {
         String decryptedPass = decrypt(encryptedText, secretKey);
         return pass.equals(decryptedPass);
     }
