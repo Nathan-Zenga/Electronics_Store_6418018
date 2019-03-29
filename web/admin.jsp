@@ -12,61 +12,6 @@
 <%
     // preparing name to prepend to title element
     request.setAttribute("title", "Admin - ");
-    
-    // Establishing Java DB connection
-    Connection con = null;
-    PreparedStatement st = null;
-    ResultSet rs = null;
-    String url = "jdbc:derby://localhost/electronic_store_DB";
-    String user = "nat";
-    String pass = "nat";
-
-    try {
-        Class.forName("org.apache.derby.jdbc.ClientDriver");
-        con = DriverManager.getConnection(url, user, pass);
-
-    } catch(Exception e){
-        e.printStackTrace();
-        System.out.println("No Conection: " + e);
-    }
-
-    if (request.getParameter("save-product") != null) {
-
-        long id = new RandomID().generate();
-        String product_name = request.getParameter("product_name");
-        double product_price = Double.parseDouble(request.getParameter("product_price"));
-        String product_image = request.getParameter("product_image");
-        String product_type = request.getParameter("product_type");
-        
-        if (product_image != null && !product_image.isEmpty()) {
-            new ImageDownloader().save(request, product_image, product_name.replaceAll(" ", "_"));
-        }
-
-        if (request.getParameter("new_category") != null && !request.getParameter("new_category").isEmpty()) {
-            product_type = request.getParameter("new_category");
-        }
-
-        // insertion process - saving new product
-        try {
-            String sql = "insert into products values (?, ?, ?, ?)";
-            st = con.prepareStatement(sql);
-            st.setLong(1, id);
-            st.setString(2, product_name);
-            st.setDouble(3, product_price);
-            st.setString(4, product_type);
-
-            st.executeUpdate();
-
-        } catch(Exception e) {
-            System.out.println("Query Exception:");
-            System.out.println(e.getMessage());
-            st.close();
-            con.close();
-        }
-
-        request.setAttribute("success-msg", "Product saved!");
-        response.sendRedirect(request.getHeader("referer"));
-    }
 %>
 <jsp:include page="partials/header.jsp" flush="true" />
     <body>
@@ -106,21 +51,7 @@
                             <select class="form-control" type="text" name="product_type" placeholder="Category" required>
                                     <option value=""></option>
                                 <%
-                                // retrieving category names to display as options
-                                try {
-                                    String sql = "select product_type from nat.products " +
-                                            "order by product_type asc";
-                                    st = con.prepareStatement(sql);
-                                    rs = st.executeQuery();
-
-                                } catch(Exception e) {
-                                    System.out.println("Query Exception:");
-                                    System.out.println(e.getMessage());
-                                    rs.close();
-                                    st.close();
-                                    con.close();
-                                }
-
+                                ResultSet rs = (ResultSet)request.getAttribute("rs_product_type");
                                 String lastSelectedType = "";
                                 while(rs.next()) {
                                     String option = rs.getString("product_type");
@@ -153,21 +84,7 @@
                             <th>Total charged</th>
                         </tr>
                         <%
-                        // getting all order details, sorted by date (most recent first)
-                        try {
-                            String sql = "select * from nat.orders " +
-                                    "order by order_date desc";
-                            st = con.prepareStatement(sql);
-                            rs = st.executeQuery();
-
-                        } catch(Exception e) {
-                            System.out.println("Query Exception:");
-                            System.out.println(e.getMessage());
-                            rs.close();
-                            st.close();
-                            con.close();
-                        }
-
+                        rs = (ResultSet)request.getAttribute("rs_orders");
                         while(rs.next()) {
                         %>
                         <tr>

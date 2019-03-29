@@ -11,23 +11,6 @@
 <%@ page session="true" import="shopserverpkg.Product" %>
 <% request.setAttribute("title", ""); %>
 <jsp:include page="partials/header.jsp" flush="true" />
-    <%
-    Connection con = null;
-    Statement st = null;
-    ResultSet rs = null;
-    String url = "jdbc:derby://localhost/electronic_store_DB";
-    String user = "nat";
-    String pass = "nat";
-
-    try {
-        Class.forName("org.apache.derby.jdbc.ClientDriver");
-        con = DriverManager.getConnection(url, user, pass);
-
-    } catch(Exception e){
-        e.printStackTrace();
-        System.out.println("No Conection: " + e);
-    }
-    %>
     <body>
         <jsp:include page="partials/body-header.jsp" flush="true" />
 
@@ -42,76 +25,14 @@
         
         <main class="container inner-body">
             <div class="row sub-nav categories">
-                <%
-                    /**
-                     * Selecting names of product types to display
-                     * as links to product categories.
-                     */
-                    try {
-                        String sql = "select product_type from nat.products " +
-                                "order by product_type asc";
-                        st = con.createStatement(
-                                ResultSet.TYPE_SCROLL_INSENSITIVE,
-                                ResultSet.CONCUR_READ_ONLY
-                        );
-                        rs = st.executeQuery(sql);
-
-                    } catch(Exception e) {
-                        System.out.println("Query Exception:");
-                        System.out.println(e.getMessage());
-                        rs.close();
-                        st.close();
-                        con.close();
-                    }
-
-                    String lastCategoryName = "";
-                    String links = "";
-                    while(rs.next()) {
-                        String category = rs.getString("product_type").trim();
-                        if (!category.equals(lastCategoryName)) {
-                            String ctg = "<a href='?category="+ category.toLowerCase() +"'>" +
-                                    category.split("")[0].toUpperCase() +
-                                    category.substring(1) +
-                                    "</a>";
-                            links += rs.isLast() ? ctg : ctg + "&emsp;&bull;&emsp;";
-                        }
-                        lastCategoryName = category;
-                    }
-                    // to unescape/decode included special characters - '&emsp;'
-                    request.setAttribute("linksString", links);
-                %>
-                ${linksString}
+                ${links_htmlString}
             </div>
             <div class="row product-list">
                 <%
-                    String categoryParam = request.getParameter("category");
-                    String sql;
+                    // Displaying products from result set
+                    ResultSet rs = (ResultSet)request.getAttribute("products_rs");
 
-                    try {
-                        if (categoryParam != null) {
-                            /**
-                             * Selecting and displaying products under
-                             * given category.
-                             */
-                            sql = "select * from nat.products where product_type = '"+ categoryParam +"'";
-                        } else {
-                            /**
-                             * Selecting and displaying all products from DB.
-                             */
-                            sql = "select * from nat.products";
-                        }
-                        st = con.createStatement();
-                        rs = st.executeQuery(sql);
-
-                    } catch(Exception e) {
-                        System.out.println("Query Exception:");
-                        System.out.println(e.getMessage());
-                        rs.close();
-                        st.close();
-                        con.close();
-                    }
-
-                    while(rs.next()){
+                while(rs.next()) {
                     String id = rs.getString("id");
                     String product_name = rs.getString("product_name");
                     String product_price = rs.getString("product_price");

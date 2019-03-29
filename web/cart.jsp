@@ -8,12 +8,6 @@
 <%@ page contentType="text/html" pageEncoding="UTF-8" %>
 <%@ page session="true" import="shopserverpkg.Product" %>
 <% request.setAttribute("title", "Cart - "); %>
-<%
-    if (request.getParameter("checkout") != null) {
-        session.setAttribute("checkingout", true);
-        response.sendRedirect(request.getContextPath() + "/checkout.jsp");
-    }
-%>
 <jsp:include page="partials/header.jsp" flush="true" />
     <% ArrayList items = (ArrayList)session.getAttribute("cartlist"); %>
     <body>
