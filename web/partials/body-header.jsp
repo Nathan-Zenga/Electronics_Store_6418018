@@ -9,12 +9,12 @@
         <header class="header">
             <div class="container">
                 <div class="row title">
-                    <h1><a href="<%= request.getContextPath() %>">Electronics Store</a></h1>
+                    <h1><a href="/">Electronics Store</a></h1>
                 </div>
                 <div class="row header-content">
                     <% ArrayList cartlist = (ArrayList) session.getAttribute("cartlist"); %>
                     <% int cartcount = cartlist != null ? cartlist.size() : 0; %>
-                    <a class="cart-icon" href='cart.jsp'>
+                    <a class="cart-icon" href='/cart'>
                         <span>
                             <i class="fas fa-shopping-cart"></i> <%= cartcount %>
                         </span>
