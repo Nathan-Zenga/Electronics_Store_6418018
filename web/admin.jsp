@@ -42,8 +42,13 @@
                     <h2>Add new Product</h2>
                     <form class="new-product-form" method="get">
                         <input class="form-control" type="text" name="product_name" placeholder="Product name" required>
-                        <input class="form-control" type="text" name="product_price" placeholder="Price" required>
                         <input class="form-control" type="text" name="product_image" placeholder="Product image (enter URL)">
+                        <div class="product_price input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">£</span>
+                            </div>
+                            <input class="form-control" type="number" step="0.01" name="product_price" min="0" placeholder="Price" required>
+                        </div>
                         <div class="product_type input-group">
                             <div class="input-group-prepend">
                                 <span class="input-group-text">Select category</span>
@@ -112,6 +117,12 @@
                 }
             });
         </script>
+        
+        <%
+            Statement st = (Statement)request.getAttribute("sql_statement");
+            rs.close();
+            st.close();
+        %>
 
     </body>
 </html>
