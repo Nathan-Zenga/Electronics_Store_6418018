@@ -72,6 +72,9 @@ public class Admin extends HttpServlet {
                 product_type = request.getParameter("new_category");
             }
 
+            // replacing any of the following chars before db insertion
+            product_type = product_type.replaceAll("&|and|,", "_").replaceAll(" ", "");
+
             // insertion process
             try {
                 String sql = "insert into products values (?, ?, ?, ?)";
@@ -122,9 +125,9 @@ public class Admin extends HttpServlet {
 
                 // to apply within admin.jsp
                 request.setAttribute("rs_orders", rs);
-
-                rs.close();
-                st.close();
+                
+                // to close at client-side (admin.jsp) to avoid SQLExceptoion
+                request.setAttribute("sql_statement", st);
 
             } catch(Exception e) {
                 System.out.println("Query Exception:");

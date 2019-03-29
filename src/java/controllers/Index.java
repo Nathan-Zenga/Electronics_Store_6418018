@@ -76,7 +76,7 @@ public class Index extends HttpServlet {
                 if (!category.equals(lastCategoryName)) {
                     String ctg = "<a href='?category="+ category.toLowerCase() +"'>" +
                             category.split("")[0].toUpperCase() +
-                            category.substring(1) +
+                            category.substring(1).replaceAll("_", " / ") +
                             "</a>";
                     links += rs.isLast() ? ctg : ctg + "&emsp;&bull;&emsp;";
                 }
