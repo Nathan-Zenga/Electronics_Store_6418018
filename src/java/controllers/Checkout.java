@@ -43,7 +43,8 @@ public class Checkout extends HttpServlet {
         // Checkout page is unaccessible if attribute invalid
         // unless user pressed Checkout button from cart page
         if (session.getAttribute("checkingout") == null) {
-            response.sendRedirect(request.getHeader("referer"));
+            session.setAttribute("error", "Invalid entry");
+            response.sendRedirect("/");
 
         } else if (request.getParameter("purchase") != null) {
             int order_no = (int)Math.round(Math.random() * 1000000);
