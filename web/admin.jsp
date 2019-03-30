@@ -1,5 +1,5 @@
 <%-- 
-    Document   : profile
+    Document   : admin
     Created on : 23-Mar-2019, 14:20:10
     Author     : Nathan
 --%>
@@ -85,6 +85,7 @@
                             <th>Customer number</th>
                             <th>Customer name</th>
                             <th>Billing address</th>
+                            <th>Card number</th>
                             <th>Card type</th>
                             <th>Total charged</th>
                         </tr>
@@ -95,8 +96,9 @@
                         <tr>
                             <td><%= rs.getInt("order_no") %></td>
                             <td><%= rs.getInt("customer_no") %></td>
-                            <td><%= rs.getString("name") %></td>
+                            <td><%= rs.getString("customer_name") %></td>
                             <td><%= rs.getString("billing_address") %></td>
+                            <td><%= rs.getString("card_no") %></td>
                             <td><%= rs.getString("card_type") %></td>
                             <td>£<%= rs.getDouble("total_price") %></td>
                         </tr>
@@ -105,7 +107,7 @@
                 </div>
             </div>
         </main>
-                
+
         <script>
             $("select[name='product_type']").change(function(){
                 if ($(this).val() === "new") {
@@ -117,7 +119,7 @@
                 }
             });
         </script>
-        
+
         <%
             Statement st = (Statement)request.getAttribute("sql_statement");
             rs.close();
