@@ -13,15 +13,6 @@
 <jsp:include page="partials/header.jsp" flush="true" />
     <body>
         <jsp:include page="partials/body-header.jsp" flush="true" />
-
-        <% if (session.getAttribute("checkedout") != null) { %>
-        <div class="msg checkout-msg btn-success">
-            <div class="container">
-                Your purchase is complete. Thank you for shopping with us!
-            </div>
-        </div>
-        <% session.invalidate();
-        } %>
         
         <main class="container inner-body">
             <div class="row sub-nav categories">
