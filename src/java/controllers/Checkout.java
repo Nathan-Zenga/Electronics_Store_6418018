@@ -39,20 +39,27 @@ public class Checkout extends HttpServlet {
             throws ServletException, IOException {
         
         HttpSession session = request.getSession(true);
+        ArrayList cartlist = (ArrayList)session.getAttribute("cartlist");
 
         // Checkout page is unaccessible if attribute invalid
-        // unless user pressed Checkout button from cart page
-        if (session.getAttribute("checkingout") == null) {
+        // unless user pressed checkout button or cart not empty
+        if (session.getAttribute("checkingout").equals(null) && (cartlist == null || cartlist.isEmpty())) {
             session.setAttribute("error", "Invalid entry");
             response.sendRedirect("/");
 
         } else if (request.getParameter("purchase") != null) {
             int order_no = (int)Math.round(Math.random() * 1000000);
             int customer_no = (int)Math.round(Math.random() * 1000000);
-            float total_price = (Float)session.getAttribute("totalprice");
-            String name = request.getParameter("fullname");
+            float total_price = Float.parseFloat(request.getParameter("totalprice"));
+            String fullname = request.getParameter("fullname");
+            String[] card_no = request.getParameterValues("card_no");
             String billing_address = request.getParameter("billing_address");
             String card_type = request.getParameter("card_type");
+
+            card_no[0] = "****";
+            card_no[1] = "****";
+            card_no[2] = "****";
+            String card_no_formatted = String.join("-", card_no);
 
             // Getting today's date
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -77,15 +84,16 @@ public class Checkout extends HttpServlet {
 
             // Insertion process - storing order
             try {
-                String sql = "insert into orders values (?, ?, ?, ?, ?, ?, ?)";
+                String sql = "insert into orders values (?, ?, ?, ?, ?, ?, ?, ?)";
                 st = con.prepareStatement(sql);
                 st.setInt(1, order_no);
                 st.setInt(2, customer_no);
-                st.setString(3, name);
+                st.setString(3, fullname);
                 st.setString(4, billing_address);
-                st.setString(5, card_type);
-                st.setFloat(6, total_price);
-                st.setTimestamp(7, Timestamp.valueOf(order_date));
+                st.setString(5, card_no_formatted);
+                st.setString(6, card_type);
+                st.setFloat(7, total_price);
+                st.setTimestamp(8, Timestamp.valueOf(order_date));
 
                 st.executeUpdate();
                 st.close();
