@@ -73,7 +73,7 @@ public class Admin extends HttpServlet {
             }
 
             // replacing any of the following chars before db insertion
-            product_type = product_type.replaceAll("&|and|,", "_").replaceAll(" ", "");
+            product_type = product_type.replaceAll("&| and |,", "_").replaceAll(" ", "");
 
             // insertion process
             try {
