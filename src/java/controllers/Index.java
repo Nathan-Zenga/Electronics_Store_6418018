@@ -69,22 +69,21 @@ public class Index extends HttpServlet {
 
 
             // formatting links as HTML anchor elements
-            String lastCategoryName = "";
-            String links = "";
+            // using HashSet to store unique values
+            HashSet linksSet = new HashSet();
             while(rs.next()) {
                 String category = rs.getString("product_type").trim();
-                if (!category.equals(lastCategoryName)) {
-                    String ctg = "<a href='?category="+ category.toLowerCase() +"'>" +
-                            category.split("")[0].toUpperCase() +
-                            category.substring(1).replaceAll("_", " / ") +
-                            "</a>";
-                    links += rs.isLast() ? ctg : ctg + "&emsp;&bull;&emsp;";
-                }
-                lastCategoryName = category;
+                category = "<a href='?category="+ category.toLowerCase() +"'>" +
+                        category.split("")[0].toUpperCase() +
+                        category.substring(1).replaceAll("_", " / ") +
+                        "</a>";
+                linksSet.add(category);
             }
 
+            String linksStr = String.join("&emsp;&bull;&emsp;", linksSet);
+
             // to unescape/decode included special characters
-            request.setAttribute("links_htmlString", links);
+            request.setAttribute("links_htmlString", linksStr);
 
 
             /**
