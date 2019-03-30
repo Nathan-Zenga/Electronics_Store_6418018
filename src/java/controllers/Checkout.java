@@ -43,7 +43,7 @@ public class Checkout extends HttpServlet {
 
         // Checkout page is unaccessible if attribute invalid
         // unless user pressed checkout button or cart not empty
-        if (session.getAttribute("checkingout").equals(null) && (cartlist == null || cartlist.isEmpty())) {
+        if (session.getAttribute("checkingout") == null && (cartlist == null || cartlist.isEmpty())) {
             session.setAttribute("error", "Invalid entry");
             response.sendRedirect("/");
 
