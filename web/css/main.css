@@ -39,6 +39,16 @@ header .row:not(:last-child) {
     margin-bottom: 1em;
 }
 
+header .container {
+    position: relative;
+}
+
+header .admin-link {
+    position: absolute;
+    right: 20px;
+    font-weight: bold;
+}
+
 @media(max-width: 767px) {
     .product {
         margin-bottom: 2em;

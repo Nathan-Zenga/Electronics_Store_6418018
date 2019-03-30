@@ -8,6 +8,9 @@
 <%@ page import="java.util.*" %>
         <header class="header">
             <div class="container">
+                <div class="admin-link">
+                    <a href="/admin">Admin</a>
+                </div>
                 <div class="row title">
                     <h1><a href="/">Electronics Store</a></h1>
                 </div>
