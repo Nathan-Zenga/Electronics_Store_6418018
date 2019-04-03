@@ -14,6 +14,7 @@ public class Product {
     private String name;
     private float price;
     private int quantity;
+    private int stock_quantity;
     private String type;
 
     public Product(float id, String name, float price, int quantity, String type) {
@@ -22,6 +23,7 @@ public class Product {
         this.price = price;
         this.type = type;
         this.quantity = quantity;
+        this.stock_quantity = stock_quantity;
     }
 
     /**
@@ -81,4 +83,11 @@ public class Product {
         this.type = type;
     }
 
+    public void setStockQuantity(String stock_quantity) {
+        this.stock_quantity = stock_quantity;
+    }
+
+    public int getStockQuantity() {
+        return stock_quantity;
+    }
 }
