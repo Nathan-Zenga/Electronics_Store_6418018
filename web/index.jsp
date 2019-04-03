@@ -13,28 +13,32 @@
 <jsp:include page="partials/header.jsp" flush="true" />
     <body>
         <jsp:include page="partials/body-header.jsp" flush="true" />
-        
+
         <main class="container inner-body">
             <div class="row sub-nav categories">
                 ${links_htmlString}
             </div>
             <div class="row product-list">
                 <%
-                    // Displaying products from result set
-                    ResultSet rs = (ResultSet)request.getAttribute("products_rs");
+                // Displaying products from result set
+                ResultSet rs = (ResultSet)request.getAttribute("products_rs");
 
                 while(rs.next()) {
                     String id = rs.getString("id");
                     String product_name = rs.getString("product_name");
                     String product_price = rs.getString("product_price");
                     String product_type = rs.getString("product_type");
+                    String product_sq = rs.getString("product_stock_qty");
                 %>
                 <div class="product col-md-4 float-md-left">
                     <div class="product-image"
                          style="background-image: url('./img/<%= product_name.replaceAll(" ", "_") %>.jpg')">
                     </div>
                     <div class="product-name"><%= product_name %></div>
-                    <div class="product-price">£<%= product_price %></div>
+                    <div class="product-info row">
+                        <div class="product-price col-6 float-left">£<%= product_price %></div>
+                        <div class="product-stock-qty col-6 float-left">In Stock: <b><%= product_sq %></b></div>
+                    </div>
                     <div class="options">
                         <form method="post" action="ShopServlet">
                             <input type="hidden" name="id" value="<%= id %>">
