@@ -72,8 +72,8 @@ public class Admin extends HttpServlet {
                 product_type = request.getParameter("new_category");
             }
 
-            // replacing any of the following chars before db insertion
-            product_type = product_type.replaceAll("&| and |,", "_").replaceAll(" ", "");
+            // formatting product type field before db insertion
+            product_type = product_type.replaceAll("&| and |,", "_").replaceAll(" ", "").toLowerCase();
 
             // insertion process
             try {
