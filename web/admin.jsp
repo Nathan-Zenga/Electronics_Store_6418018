@@ -74,6 +74,7 @@
                             </select>
                         </div>
                         <input class="form-control" type="text" name="new_category" placeholder="Enter new category" style="display: none">
+                        <input class="form-control" type="number" name="stock_qty" min="0" placeholder="Set stock quantity" required>
                         <input class="form-control btn-secondary" type="submit" name="save-product" value="Save product">
                     </form>
                 </div>

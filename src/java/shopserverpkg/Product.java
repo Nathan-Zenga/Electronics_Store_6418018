@@ -17,7 +17,7 @@ public class Product {
     private int stock_quantity;
     private String type;
 
-    public Product(float id, String name, float price, int quantity, String type) {
+    public Product(float id, String name, float price, int quantity, String type, int stock_quantity) {
         this.id = id;
         this.name = name;
         this.price = price;
@@ -83,7 +83,7 @@ public class Product {
         this.type = type;
     }
 
-    public void setStockQuantity(String stock_quantity) {
+    public void setStockQuantity(int stock_quantity) {
         this.stock_quantity = stock_quantity;
     }
 

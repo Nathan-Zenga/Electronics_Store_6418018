@@ -63,6 +63,7 @@ public class Admin extends HttpServlet {
             double product_price = Double.parseDouble(request.getParameter("product_price"));
             String product_image = request.getParameter("product_image");
             String product_type = request.getParameter("product_type");
+            int product_stock_qty = Integer.parseInt(request.getParameter("stock_qty"));
 
             if (product_image != null && !product_image.isEmpty()) {
                 new ImageDownloader().save(request, product_image, product_name.replaceAll(" ", "_"));
@@ -77,12 +78,13 @@ public class Admin extends HttpServlet {
 
             // insertion process
             try {
-                String sql = "insert into products values (?, ?, ?, ?)";
+                String sql = "insert into products values (?, ?, ?, ?, ?)";
                 st = con.prepareStatement(sql);
                 st.setLong(1, id);
                 st.setString(2, product_name);
                 st.setDouble(3, product_price);
                 st.setString(4, product_type);
+                st.setInt(5, product_stock_qty);
 
                 st.executeUpdate();
 
