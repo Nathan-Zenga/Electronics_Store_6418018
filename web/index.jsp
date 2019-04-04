@@ -41,16 +41,16 @@
                     </div>
                     <div class="options">
                         <form method="post" action="ShopServlet">
-                            <input type="hidden" name="id" value="<%= id %>">
-                            <input type="hidden" name="product_name" value="<%= product_name %>">
-                            <input type="hidden" name="product_price" value="<%= product_price %>">
-                            <input type="hidden" name="product_type" value="<%= product_type %>">
-                            <input type="hidden" name="product_stock_qty" value="<%= product_sq %>">
+                            <input type="hidden" name="id" value="<%= id %>" required>
+                            <input type="hidden" name="product_name" value="<%= product_name %>" required>
+                            <input type="hidden" name="product_price" value="<%= product_price %>" required>
+                            <input type="hidden" name="product_type" value="<%= product_type %>" required>
+                            <input type="hidden" name="product_stock_qty" value="<%= product_sq %>" required>
                             <div class="quantity input-group mb-3">
                                 <div class="input-group-prepend">
                                     <span class="input-group-text">Quantity</span>
                                 </div>
-                                <input class="form-control" type="number" name="product_quantity" value="1" min="1" max="<%= product_sq %>">
+                                <input class="form-control" type="number" name="product_quantity" value="1" min="1" max="<%= product_sq %>" required>
                             </div>
                                 <% if (Integer.parseInt(product_sq) == 0) { %>
                                 <input class="form-control btn btn-secondary" type="submit" name="action" value="Add to cart" disabled>
