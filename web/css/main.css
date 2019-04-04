@@ -114,6 +114,8 @@ form > * {
 
 .tab-content table {
     width: 100%;
+    border-spacing: 10px 0;
+    border-collapse: separate;
 }
 
 .tab-content tr > * {
@@ -128,4 +130,8 @@ form > * {
 .tab-content h6 {
     text-align: center;
     margin-bottom: .5em;
+}
+
+#orders-history .form-control {
+    margin: 0;
 }
