@@ -35,10 +35,10 @@
             <%= session.getAttribute("success") %>
         </div>
         <% session.removeAttribute("success");
-        } else if (session.getAttribute("checkedout") != null) { %>
+        } else if (session.getAttribute("checkedout_msg") != null) { %>
         <div class="msg checkout-msg btn-success">
             <div class="container">
-                Your purchase is complete. Thank you for shopping with us!
+                <%= session.getAttribute("checkedout_msg") %>
             </div>
         </div>
         <% session.invalidate();

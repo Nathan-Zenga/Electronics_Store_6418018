@@ -116,8 +116,11 @@ public class Checkout extends HttpServlet {
                 System.out.println("Query Exception:");
                 System.out.println(e.getMessage());
             }
+            
+            String msg = "Your purchase is complete. Thank you for shopping with us! " +
+                    "Your order number is " + order_no;
             session.removeAttribute("checkingout");
-            session.setAttribute("checkedout", true); // for success message
+            request.setAttribute("checkedout_msg", msg); // for success message
             response.sendRedirect(request.getContextPath());
         } else {
 
