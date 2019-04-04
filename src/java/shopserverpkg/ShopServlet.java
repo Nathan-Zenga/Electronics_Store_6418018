@@ -53,7 +53,7 @@ public class ShopServlet extends HttpServlet {
             String pName = request.getParameter("product_name");
             float pPrice = Float.parseFloat(request.getParameter("product_price"));
             int pQuantity = Integer.parseInt(request.getParameter("product_quantity"));
-            int pStockQuantity = Integer.parseInt(request.getParameter("product_quantity"));
+            int pStockQuantity = Integer.parseInt(request.getParameter("product_stock_qty"));
             String pType = request.getParameter("product_Type");
 
             Product product = new Product(id, pName, pPrice, pQuantity, pType, pStockQuantity);
