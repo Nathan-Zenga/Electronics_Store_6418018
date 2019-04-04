@@ -50,9 +50,13 @@
                                 <div class="input-group-prepend">
                                     <span class="input-group-text">Quantity</span>
                                 </div>
-                                <input class="form-control" type="number" name="product_quantity" value="1" min="1">
+                                <input class="form-control" type="number" name="product_quantity" value="1" min="1" max="<%= product_sq %>">
                             </div>
-                            <input class="form-control btn btn-secondary" type="submit" name="action" value="Add to cart">
+                                <% if (Integer.parseInt(product_sq) == 0) { %>
+                                <input class="form-control btn btn-secondary" type="submit" name="action" value="Add to cart" disabled>
+                            <% } else { %>
+                                <input class="form-control btn btn-secondary" type="submit" name="action" value="Add to cart">
+                            <% } %>
                         </form>
                     </div>
                 </div>
