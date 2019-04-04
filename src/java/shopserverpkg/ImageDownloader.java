@@ -19,12 +19,18 @@ import javax.servlet.http.HttpServletRequest;
 public class ImageDownloader {
     public boolean save(HttpServletRequest request, String src, String newFilename) throws IOException {
         BufferedImage img = null;
-        String rootPath = request.getSession().getServletContext().getRealPath("/img/");
+        String rootPath;
+        if (request != null) {
+            rootPath = request.getSession().getServletContext().getRealPath("/img/");
+            int endindex = rootPath.indexOf("\\build\\");
+            rootPath = rootPath.substring(0, endindex) + "\\web\\img";
+        } else {
+            // for testing mode
+            rootPath = new File("").getAbsolutePath();
+        }
         String ext = src.contains(".png") || src.contains(".PNG") ? "png" : "jpg";
         boolean complete;
         
-        int endindex = rootPath.indexOf("\\build\\");
-        rootPath = rootPath.substring(0, endindex) + "\\web\\img";
         newFilename = rootPath + "\\" + newFilename + "." + ext;
         System.out.println(newFilename);
 
