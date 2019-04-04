@@ -18,6 +18,7 @@ import java.util.*;
 import javax.sql.*;
 import java.sql.*;
 import javax.servlet.RequestDispatcher;
+import shopserverpkg.Product;
 
 /**
  *
@@ -69,6 +70,7 @@ public class Checkout extends HttpServlet {
             // Connecting to database
             Connection con = null;
             PreparedStatement st = null;
+            ResultSet rs = null;
             String url = "jdbc:derby://localhost/electronic_store_DB";
             String user = "nat";
             String pass = "nat";
@@ -82,8 +84,8 @@ public class Checkout extends HttpServlet {
                 response.sendRedirect(request.getContextPath());
             }
 
-            // Insertion process - storing order
             try {
+                // Insertion process - storing order
                 String sql = "insert into orders values (?, ?, ?, ?, ?, ?, ?, ?)";
                 st = con.prepareStatement(sql);
                 st.setInt(1, order_no);
@@ -94,8 +96,20 @@ public class Checkout extends HttpServlet {
                 st.setString(6, card_type);
                 st.setFloat(7, total_price);
                 st.setTimestamp(8, Timestamp.valueOf(order_date));
-
                 st.executeUpdate();
+
+                // updating stock quantity of products sold
+                for (int i = 0; i < cartlist.size(); i++) {
+                    Product item = (Product)cartlist.get(i);
+                    int new_stock_qty = item.getStockQuantity() - item.getQuantity();
+
+                    sql = "update products set product_stock_qty = ? where product_name = ?";
+                    st = con.prepareStatement(sql);
+                    st.setInt(1, new_stock_qty);
+                    st.setString(2, item.getName());
+                    st.executeUpdate();
+                }
+
                 st.close();
 
             } catch(Exception e) {
@@ -103,7 +117,7 @@ public class Checkout extends HttpServlet {
                 System.out.println(e.getMessage());
             }
             session.removeAttribute("checkingout");
-            session.setAttribute("checkedout", true);
+            session.setAttribute("checkedout", true); // for success message
             response.sendRedirect(request.getContextPath());
         } else {
 
