@@ -12,6 +12,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.util.*;
 import javax.sql.*;
 import java.sql.*;
@@ -37,6 +38,8 @@ public class Admin extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        
+        HttpSession session = request.getSession(true);
 
         // Establishing Java DB connection
         Connection con = null;
@@ -94,10 +97,12 @@ public class Admin extends HttpServlet {
             } catch(Exception e) {
                 System.out.println("Query Exception:");
                 System.out.println(e.getMessage());
+                session.setAttribute("error", "Error occured whilst saving product");
+                response.sendRedirect(request.getContextPath());
             }
 
             // Refreshing page after insertion to display success message
-            request.setAttribute("success-msg", "Product saved!");
+            session.setAttribute("success", "Product saved!");
             response.sendRedirect(request.getHeader("referer"));
 
         } else {
