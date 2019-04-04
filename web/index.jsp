@@ -45,6 +45,7 @@
                             <input type="hidden" name="product_name" value="<%= product_name %>">
                             <input type="hidden" name="product_price" value="<%= product_price %>">
                             <input type="hidden" name="product_type" value="<%= product_type %>">
+                            <input type="hidden" name="product_stock_qty" value="<%= product_sq %>">
                             <div class="quantity input-group mb-3">
                                 <div class="input-group-prepend">
                                     <span class="input-group-text">Quantity</span>
