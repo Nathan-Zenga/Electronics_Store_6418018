@@ -56,11 +56,20 @@ public class Checkout extends HttpServlet {
             String[] card_no = request.getParameterValues("card_no");
             String billing_address = request.getParameter("billing_address");
             String card_type = request.getParameter("card_type");
+            String items_summary = "";
 
+            // hiding card details
             card_no[0] = "****";
             card_no[1] = "****";
             card_no[2] = "****";
             String card_no_formatted = String.join("-", card_no);
+
+            // saving summary of cart items as string for later parsing
+            for (int i = 0; i < cartlist.size(); i++) {
+                Product item = (Product)cartlist.get(i);
+                String item_detail = item.getName() + " x" + item.getQuantity();
+                items_summary += (i == 0) ? item_detail : " === "+item_detail;
+            }
 
             // Getting today's date
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -81,12 +90,13 @@ public class Checkout extends HttpServlet {
 
             } catch(Exception e){
                 System.out.println("No Conection: " + e);
+                session.setAttribute("error", "No connection");
                 response.sendRedirect(request.getContextPath());
             }
 
             try {
                 // Insertion process - storing order
-                String sql = "insert into orders values (?, ?, ?, ?, ?, ?, ?, ?)";
+                String sql = "insert into orders values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
                 st = con.prepareStatement(sql);
                 st.setInt(1, order_no);
                 st.setInt(2, customer_no);
@@ -96,6 +106,8 @@ public class Checkout extends HttpServlet {
                 st.setString(6, card_type);
                 st.setFloat(7, total_price);
                 st.setTimestamp(8, Timestamp.valueOf(order_date));
+                st.setString(9, items_summary);
+                st.setString(10, "Pending");
                 st.executeUpdate();
 
                 // updating stock quantity of products sold
@@ -115,12 +127,14 @@ public class Checkout extends HttpServlet {
             } catch(Exception e) {
                 System.out.println("Query Exception:");
                 System.out.println(e.getMessage());
+                session.setAttribute("error", "Error: Query Exception");
+                response.sendRedirect(request.getContextPath());
             }
             
             String msg = "Your purchase is complete. Thank you for shopping with us! " +
                     "Your order number is " + order_no;
             session.removeAttribute("checkingout");
-            request.setAttribute("checkedout_msg", msg); // for success message
+            session.setAttribute("checkedout_msg", msg); // for success message
             response.sendRedirect(request.getContextPath());
         } else {
 
