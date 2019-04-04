@@ -58,8 +58,32 @@ public class Admin extends HttpServlet {
             System.out.println("No Conection: " + e);
         }
 
+        // updating delievery status of specified product (POST req)
+        if (request.getParameter("new_delivery_status") != null) {
+            String new_delivery_status = request.getParameter("new_delivery_status");
+            int order_no = Integer.parseInt(request.getParameter("order_no"));
+
+            try {
+                String sql = "update orders set delivery_status = ? where order_no = ?";
+                st = con.prepareStatement(sql);
+                st.setString(1, new_delivery_status);
+                st.setInt(2, order_no);
+                st.executeUpdate();
+                st.close();
+                con.close();
+
+                session.setAttribute("success", "Updated delivery status for order no: " + order_no);
+                response.getWriter().println(request.getHeader("referer"));
+
+            } catch(Exception e) {
+                System.out.println("Query Exception:");
+                System.out.println(e.getMessage());
+                session.setAttribute("error", "Error occured whilst updating delivery status");
+                response.sendRedirect(request.getContextPath());
+            }
+
         // Saving new product
-        if (request.getParameter("save-product") != null) {
+        } else if (request.getParameter("save-product") != null) {
 
             long id = new RandomID().generate();
             String product_name = request.getParameter("product_name");

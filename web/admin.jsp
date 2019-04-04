@@ -15,15 +15,6 @@
 %>
 <jsp:include page="partials/header.jsp" flush="true" />
     <body>
-        <%
-            if (request.getAttribute("success-msg") != null) {
-        %>
-        <div class="msg btn-success">
-            <%= request.getAttribute("success-msg") %>
-        </div>
-        <%
-            }
-        %>
         <jsp:include page="partials/body-header.jsp" flush="true" />
         <main class="container inner-body">
 
@@ -84,24 +75,34 @@
                         <tr>
                             <th>Order number</th>
                             <th>Customer number</th>
-                            <th>Customer name</th>
-                            <th>Billing address</th>
-                            <th>Card number</th>
-                            <th>Card type</th>
                             <th>Total charged</th>
+                            <th>Delivery status</th>
+                            <th></th>
                         </tr>
                         <%
+                        String[] status_opts = {"Pending", "Not Delivered", "Delivered"};
                         rs = (ResultSet)request.getAttribute("rs_orders");
                         while(rs.next()) {
                         %>
-                        <tr>
+                        <tr id="<%= rs.getInt("order_no") %>">
                             <td><%= rs.getInt("order_no") %></td>
                             <td><%= rs.getInt("customer_no") %></td>
-                            <td><%= rs.getString("customer_name") %></td>
-                            <td><%= rs.getString("billing_address") %></td>
-                            <td><%= rs.getString("card_no") %></td>
-                            <td><%= rs.getString("card_type") %></td>
                             <td>£<%= rs.getDouble("total_price") %></td>
+                            <td>
+                                <form method="post">
+                                    <select class="form-control" name="edit_del_stat" value="Edit Delivery Status">
+                                    <% for (String status : status_opts) { 
+                                    if (rs.getString("delivery_status").equals(status)) { %>
+                                        <option selected><%= status %></option>
+                                    <% } else { %>
+                                        <option><%= status %></option>
+                                    <% }} %>
+                                    </select>
+                                </form>
+                            </td>
+                            <td>
+                                <a href="/admin?order_summary_id=<%= rs.getInt("order_no") %>"><button class="form-control btn-success">View summary</button></a>
+                            </td>
                         </tr>
                         <% } %>
                     </table>
@@ -118,6 +119,13 @@
                     $(this).attr("required", "true");
                     $("input[name='new_category']").val("").hide().removeAttr("required");
                 }
+            });
+            
+            $("select[name='edit_del_stat']").change(function(){
+                var data = { new_delivery_status: this.value, order_no: $(this).closest("tr").attr("id") };
+                $.post("/admin", data, function(referrer) {
+                    location.href = referrer;
+                });
             });
         </script>
 
