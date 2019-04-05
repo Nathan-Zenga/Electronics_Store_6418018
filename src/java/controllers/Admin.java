@@ -151,7 +151,11 @@ public class Admin extends HttpServlet {
 
                 sql = "select * from nat.orders " +
                         "order by order_date desc";
-                st = con.prepareStatement(sql);
+                st = con.prepareStatement(
+                        sql,
+                        ResultSet.TYPE_SCROLL_INSENSITIVE,
+                        ResultSet.CONCUR_READ_ONLY
+                );
                 rs = st.executeQuery();
 
                 // to apply within admin.jsp
