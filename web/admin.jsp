@@ -12,6 +12,8 @@
 <%
     // preparing name to prepend to title element
     request.setAttribute("title", "Admin - ");
+    // passed as parameter to render page to include order summary section
+    String order_summary_id = request.getParameter("order_summary_id");
 %>
 <jsp:include page="partials/header.jsp" flush="true" />
     <body>
@@ -19,17 +21,16 @@
         <main class="container inner-body">
 
             <ul class="nav nav-tabs" id="myTab" role="tablist">
-                <li class="nav-item">
-                    <a class="nav-link active" id="add-product-tab" data-toggle="tab" href="#add-product" role="tab" aria-controls="add-product" aria-selected="true">Add new product</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" id="orders-tab" data-toggle="tab" href="#orders-history" role="tab" aria-controls="orders-history" aria-selected="false">Order history</a>
-                </li>
+                <li class="nav-item"><a class="nav-link <%= order_summary_id != null ? "" : "active" %>" id="add-product-tab" data-toggle="tab" href="#add-product" role="tab" aria-controls="add-product" aria-selected="true">Add new product</a></li>
+                <li class="nav-item"><a class="nav-link" id="orders-tab" data-toggle="tab" href="#orders-history" role="tab" aria-controls="orders-history" aria-selected="false">Order history</a></li>
+                <% if (order_summary_id != null) { %>
+                <li class="nav-item"><a class="nav-link active" id="order-summary-tab" data-toggle="tab" href="#order-summary" role="tab" aria-controls="order-summary" aria-selected="false">Order summary</a></li>
+                <% } %>
             </ul>
 
 
             <div class="tab-content">
-                <div class="tab-pane fade show active" id="add-product" role="tabpanel" aria-labelledby="add-product-tab">
+                <div class="tab-pane fade <%= order_summary_id != null ? "" : "show active" %>" id="add-product" role="tabpanel" aria-labelledby="add-product-tab">
                     <h2>Add new Product</h2>
                     <form class="new-product-form" method="get">
                         <input class="form-control" type="text" name="product_name" placeholder="Product name" required>
@@ -107,6 +108,60 @@
                         <% } %>
                     </table>
                 </div>
+
+                <% if (order_summary_id != null) { %>
+                <div class="tab-pane fade show active" id="order-summary" role="tabpanel" aria-labelledby="order-summary-tab">
+                    <%
+                    rs.beforeFirst(); // move cursor back to before first row
+                    while(rs.next()) {
+                        if (rs.getInt("order_no") == Integer.parseInt(order_summary_id)) {
+                    %>
+                    <div class="row">
+                        <div class="col-6 float-left">
+                            <p><b>Order number</b></p>
+                            <p><%= rs.getInt("order_no") %></p>
+                        </div>
+                        <div class="col-6 float-left">
+                            <p><b>Customer number</b></p>
+                            <p><%= rs.getInt("customer_no") %></p>
+                        </div>
+                    </div>
+                    <br>
+
+                    <div class="row">
+                        <div class="col-sm-6 float-sm-left">
+                            <p><b>Customer fullname</b></p>
+                            <p><%= rs.getString("customer_name") %></p>
+                        </div>
+                        <div class="col-sm-6 float-sm-left">
+                            <p><b>Billing address</b></p>
+                            <p><%= rs.getString("billing_address") %></p>
+                        </div>
+                    </div>
+                    <br>
+
+                    <div class="row">
+                        <div class="col-6 float-left">
+                            <p><b>Card number</b></p>
+                            <p><%= rs.getString("card_no") %></p>
+                        </div>
+                        <div class="col-6 float-left">
+                            <p><b>Card type</b></p>
+                            <p><%= rs.getString("card_type") %></p>
+                        </div>
+                    </div>
+                    <br>
+
+                    <p><b>Items purchased</b></p>
+                    <%
+                    String[] itemsList = rs.getString("items_summary").split(" === ");
+                    for (String item : itemsList) {
+                    %>
+                    <p><%= item %></p>
+                    <% }}} %>
+                </div>
+                <% } %>
+
             </div>
         </main>
 
