@@ -129,6 +129,32 @@ public class Admin extends HttpServlet {
             session.setAttribute("success", "Product saved!");
             response.sendRedirect(request.getHeader("referer"));
 
+        // Update stock quantity of specific product
+        } else if (request.getParameter("new_stock_qty") != null) {
+            
+            long id = Long.parseLong(request.getParameter("id"));
+            int new_stock_qty = Integer.parseInt(request.getParameter("new_stock_qty"));
+
+            try {
+                String sql = "update nat.products set product_stock_qty = ? where id = ?";
+                st = con.prepareStatement(sql);
+                st.setInt(1, new_stock_qty);
+                st.setLong(2, id);
+                st.executeUpdate();
+
+                st.close();
+                con.close();
+
+            } catch(Exception e) {
+                System.out.println("Query Exception:");
+                System.out.println(e.getMessage());
+                session.setAttribute("error", "Error occured whilst updating stock quantity");
+                response.sendRedirect(request.getContextPath());
+            }
+
+            // Refreshing page after stock quantity update
+            session.setAttribute("success", "Stock quantity updated for product ID: " + id + ". Now " + new_stock_qty + " in stock.");
+            response.sendRedirect(request.getHeader("referer"));
         } else {
 
             try {
@@ -141,9 +167,22 @@ public class Admin extends HttpServlet {
                 st = con.prepareStatement(sql);
                 rs = st.executeQuery();
 
-                // to apply within admin.jsp
+                // to apply and display as category options when adding new product
                 request.setAttribute("rs_product_type", rs);
 
+                /**
+                 * Preparing stock quantity updating process
+                 */
+
+                sql = "select id, product_name, product_stock_qty from nat.products";
+                st = con.prepareStatement(
+                        sql,
+                        ResultSet.TYPE_SCROLL_INSENSITIVE,
+                        ResultSet.CONCUR_READ_ONLY
+                );
+                rs = st.executeQuery();
+
+                request.setAttribute("rs_products", rs);
 
                 /**
                  * Getting all order details, sorted by date (most recent first)

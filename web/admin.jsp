@@ -26,6 +26,7 @@
                 <% if (order_summary_id != null) { %>
                 <li class="nav-item"><a class="nav-link active" id="order-summary-tab" data-toggle="tab" href="#order-summary" role="tab" aria-controls="order-summary" aria-selected="false">Order summary</a></li>
                 <% } %>
+                <li class="nav-item"><a class="nav-link" id="stock-qty-update-tab" data-toggle="tab" href="#stock-qty-update" role="tab" aria-controls="stock-qty-update" aria-selected="false">Update stocks</a></li>
             </ul>
 
 
@@ -108,11 +109,11 @@
                         <% } %>
                     </table>
                 </div>
-
+                    
                 <% if (order_summary_id != null) { %>
                 <div class="tab-pane fade show active" id="order-summary" role="tabpanel" aria-labelledby="order-summary-tab">
                     <%
-                    rs.beforeFirst(); // move cursor back to before first row
+                    rs.beforeFirst(); // moves cursor back to start of result set
                     while(rs.next()) {
                         if (rs.getInt("order_no") == Integer.parseInt(order_summary_id)) {
                     %>
@@ -161,6 +162,27 @@
                     <% }}} %>
                 </div>
                 <% } %>
+
+                <div class="tab-pane fade" id="stock-qty-update" role="tabpanel" aria-labelledby="stock-qty-update-tab">
+                    <%
+                    // products set with product id + name + stock quantity fields only
+                    rs = (ResultSet)request.getAttribute("rs_products");
+                    while(rs.next()) {
+                    %>
+                    <div class="row">
+                        <div class="col-sm-6 float-sm-left"><%= rs.getString("product_name") %></div>
+                        <div class="col-sm-6 float-sm-left">
+                            <form method="get">
+                                <input type="hidden" name="id" value="<%= rs.getLong("id") %>" required>
+                                <div class="input-group">
+                                    <div class="col-sm-6 float-sm-left"><input class="form-control" type="number" min="0" name="new_stock_qty" value="<%= rs.getInt("product_stock_qty") %>" required></div>
+                                    <div class="col-sm-6 float-sm-left"><input class="form-control btn-success" type="submit" value="Update"></div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <% } %>
+                </div>
 
             </div>
         </main>
