@@ -71,6 +71,12 @@ header .admin-link {
     background-position: center;
 }
 
+.product-name {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow-x: hidden;
+}
+
 .cart-icon {
     position: relative;
     display: inline-block;
