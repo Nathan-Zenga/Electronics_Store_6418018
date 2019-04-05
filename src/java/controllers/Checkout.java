@@ -67,7 +67,7 @@ public class Checkout extends HttpServlet {
             // saving summary of cart items as string for later parsing
             for (int i = 0; i < cartlist.size(); i++) {
                 Product item = (Product)cartlist.get(i);
-                String item_detail = item.getName() + " x" + item.getQuantity();
+                String item_detail = item.getName() + " - £" + String.format("%.2f", item.getPrice()) + " x " + item.getQuantity();
                 items_summary += (i == 0) ? item_detail : " === "+item_detail;
             }
 
